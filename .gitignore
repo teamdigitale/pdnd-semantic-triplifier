@@ -1,3 +1,17 @@
+*.class
+*.log
+.idea/
+
+.cache-main
+.cache-tests
+.classpath
+.project
+.settings/
+
+target/
+bin/
+log/
+
 # OS X
 .history
 .DS_Store
