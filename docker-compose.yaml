@@ -1,3 +1,15 @@
 ---
+version: '2'
 
-# This file is mandatory if your're building a new container - please remove instead it if it's not needed
+services:
+
+  semantic-triplifier:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: pdnd-semantic-triplifier
+    image: teamdigitale/pdnd-semantic-triplifier
+    stdin_open: true
+    tty: true
+    ports:
+      - 7777:7777/tcp
