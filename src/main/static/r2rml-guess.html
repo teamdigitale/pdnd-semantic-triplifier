@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>testing R2RML</title>
+</head>
+<body class="container">
+
+	<div class="col-md-12">
+
+		<form role="form" class="form-area"
+			action="http://localhost:7777/kb/api/v1/triplification/r2rml/guess"
+			method="post">
+			
+
+			
+			<fieldset>
+				<label for="config">config</label>
+				<textarea class="form-control" rows="10" cols="120" name="config" placeholder="configuration" required>
+jdbc {
+	driver = "org.sqlite.JDBC"
+	dsn = "jdbc:sqlite:C:/Users/Al.Serafini/repos/DAF/db/test_comuni.db"
+	user = "aserafini"
+	password = "openD4ti"
+}
+parameters {
+	baseURI: "https://w3id.org/italia/data"
+	ontologies.base = "https://w3id.org/italia/onto"
+	vocabularies.base = "https://w3id.org/italia/controlled-vocabulary"
+}
+				</textarea>
+
+				<label for="query">SQL query</label>
+				<textarea id="query" class="form-control" rows="10" cols="120" name="query" placeholder="SQL query">
+SELECT 
+codice_regione, 
+codice_citta_metropolitana, 
+codice_provincia, 
+progressivo_del_comune, 
+codice_comune_formato_alfanumerico, 
+denominazione_corrente, 
+denominazione_altra_lingua, 
+codice_ripartizione_geografica, 
+ripartizione_geografica, denominazione_regione, 
+denominazione_citta_metropolitana, 
+denominazione_provincia, 
+flag_comune_capoluogo_di_provincia, 
+sigla_automobilistica, 
+codice_comune_formato_numerico, 
+codice_comune_numerico_con_110_province_dal_2010_al_2016, 
+codice_comune_numerico_con_107_province_dal_2006_al_2009, 
+codice_comune_numerico_con_103_province_dal_1995_al_2005, 
+codice_catastale_del_comune, popolazione_legale_2011, 
+codice_nuts1_2010, codice_nuts2_2010, codice_nuts3_2010, 
+codice_nuts1_2006, codice_nuts2_2006, codice_nuts3_2006, 
+processing_dttm 
+FROM 'gove__amministrazione.default_org_o_istat_elenco_comuni_italiani'
+				</textarea>
+
+				<input class="pull-right btn btn-default" type="submit" value="create R2RML draft" />
+
+			</fieldset>
+			
+		</form>
+		
+		<br/><br/>
+
+	</div>
+
+
+	<!-- jquery -->
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+		crossorigin="anonymous"></script>
+
+	<!-- bootstrap -->
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+		integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+		crossorigin="anonymous" />
+	<link rel="stylesheet"
+		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+		integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+		crossorigin="anonymous" />
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous"></script>
+
+	<!-- YATE -->
+	<link href="https://perfectkb.github.io/yate/dist/yate.min.css"
+		rel="stylesheet" type="text/css" />
+	<link href="https://perfectkb.github.io/yate/doc/doc.min.css"
+		rel="stylesheet" type="text/css" />
+	<script src="https://perfectkb.github.io/yate/dist/yate.bundled.min.js"></script>
+	<script src="https://perfectkb.github.io/yate/doc/doc.min.js"></script>
+	<script type="text/javascript">
+		// var yate_r2rml = YATE.fromTextArea(document.getElementById('r2rml'))
+	</script>
+
+
+</body>
+</html>
