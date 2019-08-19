@@ -1,0 +1,73 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+@prefix l0: <https://w3id.org/italia/onto/l0/> .
+@prefix clvapit: <https://w3id.org/italia/onto/CLV/> .
+@prefix roapit: <https://w3id.org/italia/onto/RO/> .
+@prefix tiapit: <https://w3id.org/italia/onto/TI/> .
+@prefix covapit: <https://w3id.org/italia/onto/COV/> . 
+
+@base  <https://w3id.org/italia/> .
+
+<VIEW_AMM_responsabili> rr:sqlQuery """
+
+SELECT DISTINCT 
+	AMM.titolo_resp AS _AMM_RESPONSABILE_TITOLO  
+	,AMM.cod_amm AS _AMM_CODICE 
+	,AMM.des_amm AS _AMM_DESCRIZIONE 
+	,AMM.cogn_resp AS _RESPONSABILE_COGNOME 
+	,AMM.nome_resp AS _RESPONSABILE_NOME 
+	,AMM.`__responsabile_hash` AS _RESPONSABILE_HASH
+	,AMM.`_amm_ruolo_id` AS _AMM_RESPONSABILE_ID 
+FROM gove__amministrazione.daf_data_o_ipa_amministrazioni_view AS AMM 
+
+"""
+.
+
+
+<TriplesMap_AMM_responsabili> a rr:TriplesMapClass ;
+
+rr:logicalTable <VIEW_AMM_responsabili> ;
+
+rr:subjectMap [ 
+	rr:template "https://w3id.org/italia/data/employment/{'_RESPONSABILE_HASH'}" ;
+	rr:class roapit:Employment ;
+] ;
+
+rr:predicateObjectMap [ 
+	rr:predicate foaf:firstName ; 
+	rr:objectMap [ rr:column "_RESPONSABILE_NOME" ; ]
+] ;
+rr:predicateObjectMap [ 
+	rr:predicate foaf:lastName ; 
+	rr:objectMap [ rr:column "_RESPONSABILE_COGNOME" ; ]
+] ;
+
+rr:predicateObjectMap [ 
+	rr:predicate covapit:employmentFor ; 
+	rr:objectMap [ 
+		rr:template "https://w3id.org/italia/data/organizations/{_AMM_CODICE}" ;
+		rr:termType rr:IRI ;
+	] 
+] ;
+
+rr:predicateObjectMap [ 
+	rr:predicate roapit:withRole ; 
+	rr:objectMap [ 
+		rr:template "https://w3id.org/italia/data/role/{'_AMM_RESPONSABILE_ID'}" ;
+		rr:termType rr:IRI ;
+	] 
+] ;
+
+rr:predicateObjectMap [ 
+	rr:predicate tiapit:atTime ; 
+	rr:objectMap [ 
+		rr:template "https://w3id.org/italia/data/time-intervals/undefined" ;
+		rr:termType rr:IRI ;
+	] 
+] ;
+
+
+.

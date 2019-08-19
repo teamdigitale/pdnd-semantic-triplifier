@@ -1,0 +1,83 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+@prefix l0: <https://w3id.org/italia/onto/l0/> .
+@prefix clvapit: <https://w3id.org/italia/onto/CLV/> .
+@prefix roapit: <https://w3id.org/italia/onto/RO/> .
+@prefix covapit: <https://w3id.org/italia/onto/COV/> .
+
+@base  <https://w3id.org/italia/> .
+
+<VIEW_AOO_indirizzi> rr:sqlQuery """
+
+SELECT DISTINCT 
+	AOO.cod_aoo AS _AOO_CODICE 
+	,AOO.des_aoo AS _AOO_DESCRIZIONE 
+	,AOO.__address_id AS _ADDRESS_ID
+	,AOO.indirizzo AS _AOO_INDIRIZZO  
+	,ISTAT.codice_comune_formato_numerico AS _COMUNE_CODICE 
+	,ISTAT.denominazione_in_italiano AS _COMUNE_DENOMINAZIONE 
+	,ISTAT.codice_regione AS _REGIONE_CODICE 
+	,ISTAT.denominazione_regione AS _REGIONE_DENOMINAZIONE 
+	,ISTAT.codice_provincia AS _PROVINCIA_CODICE 
+	,ISTAT.denominazione_provincia AS _PROVINCIA_DENOMINAZIONE 
+	,AOO.__regione_id
+FROM gove__amministrazione.daf_data_o_ipa_aoo_view AS AOO
+JOIN gove__amministrazione.daf_data_o_istat_comuni_italiani_view AS ISTAT 
+ON(AOO.comune=ISTAT.denominazione_in_italiano)
+WHERE(
+	INSTR(AOO.__regione_id,ISTAT.__regione_id) != 0 
+	AND
+	ISTAT.denominazione_provincia != '-'
+)
+
+"""
+.
+
+
+<TriplesMap_AOO_indirizzi> a rr:TriplesMapClass ;
+
+rr:logicalTable <VIEW_AOO_indirizzi> ;
+
+rr:subjectMap [ 
+	rr:template "https://w3id.org/italia/data/address/{'_COMUNE_CODICE'}#{'_ADDRESS_ID'}" ;
+	rr:class clvapit:Address ;
+] ;
+
+rr:predicateObjectMap [ 
+	rr:predicate clvapit:hasFullAddress ; 
+	rr:objectMap [ rr:column "_AOO_INDIRIZZO" ; rr:language "it" ]
+] ;
+
+rr:predicateObjectMap [ 
+	rr:predicate clvapit:hasCity ; 
+	rr:objectMap [ 
+		rr:template "https://w3id.org/italia/controlled-vocabulary/territorial-classifications/cities/{'_COMUNE_CODICE'}" ;
+		rr:termType rr:IRI ;
+	] 
+] ;
+rr:predicateObjectMap [ 
+	rr:predicate clvapit:hasProvince ; 
+	rr:objectMap [ 
+		rr:template "https://w3id.org/italia/controlled-vocabulary/territorial-classifications/provinces/{'_PROVINCIA_CODICE'}" ;
+		rr:termType rr:IRI ;
+	] 
+] ;
+rr:predicateObjectMap [ 
+	rr:predicate clvapit:hasRegion ; 
+	rr:objectMap [ 
+		rr:template "https://w3id.org/italia/controlled-vocabulary/territorial-classifications/regions/{'_REGIONE_CODICE'}" ;
+		rr:termType rr:IRI ;
+	] 
+] ;
+rr:predicateObjectMap [ 
+	rr:predicate clvapit:hasCountry ; 
+	rr:objectMap [ 
+		rr:template "https://w3id.org/italia/controlled-vocabulary/territorial-classifications/countries/ITA" ;
+		rr:termType rr:IRI ;
+	] 
+] ;
+
+
+.
